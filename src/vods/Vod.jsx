@@ -3,6 +3,8 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Thumbnail from '../assets/default_thumbnail.png';
+import TwitchBadge from '../assets/twitch.svg';
+import KickBadge from '../assets/kick.svg';
 import Chapters from './ChaptersMenu';
 import WatchMenu from './WatchMenu';
 import CustomWidthTooltip from '../utils/CustomToolTip';
@@ -46,6 +48,16 @@ export default memo(function Vod({ vod, isCdnAvailable }) {
               {`${dayjs(vod.created_at).format('LL')}`}
             </Typography>
           </Box>
+          {vod.platform === 'twitch' && (
+            <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+              <img src={TwitchBadge} alt="Twitch" style={{ width: 24, height: 24 }} />
+            </Box>
+          )}
+          {vod.platform === 'kick' && (
+            <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+              <img src={KickBadge} alt="Kick" style={{ width: 24, height: 24 }} />
+            </Box>
+          )}
         </Box>
         <Box sx={{ pointerEvents: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
           <Box sx={{ position: 'absolute', bottom: 0, right: 0 }}>
