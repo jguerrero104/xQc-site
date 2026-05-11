@@ -6,6 +6,8 @@ import RedditIcon from '@mui/icons-material/Reddit';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import Drawer from './Drawer';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import BookIcon from '@mui/icons-material/Book';
 import ReportIcon from '@mui/icons-material/Report';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -86,6 +88,26 @@ export default function Navbar() {
                     <OndemandVideoIcon color="primary" sx={{ mr: 0.5 }} />
                     <Typography color="primary" variant="h6">
                       Vods
+                    </Typography>
+                  </Box>
+                </CustomLink>
+              </Box>
+              <Box sx={{ mr: 2 }}>
+                <CustomLink href="/games">
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <SportsEsportsIcon color="primary" sx={{ mr: 0.5 }} />
+                    <Typography color="primary" variant="h6">
+                      Games
+                    </Typography>
+                  </Box>
+                </CustomLink>
+              </Box>
+              <Box sx={{ mr: 2 }}>
+                <CustomLink href="/games/library">
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <BookIcon color="primary" sx={{ mr: 0.5 }} />
+                    <Typography color="primary" variant="h6">
+                      Library
                     </Typography>
                   </Box>
                 </CustomLink>

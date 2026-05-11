@@ -15,6 +15,8 @@ const twitchId = import.meta.env.VITE_TWITCH_ID;
 const cdnBase = import.meta.env.VITE_CDN;
 
 const Vods = lazy(() => import('./vods/Vods'));
+const GamesPage = lazy(() => import('./games/Games'));
+const GamesLibrary = lazy(() => import('./games/GamesLibrary'));
 const Navbar = lazy(() => import('./navbar/Navbar'));
 const NotFound = lazy(() => import('./utils/NotFound'));
 const YoutubeVod = lazy(() => import('@op-archives/vod-components').then((m) => ({ default: m.YoutubeVod })));
@@ -57,6 +59,26 @@ export default function App() {
           <Suspense fallback={<Loading />}>
             <ErrorBoundary channel={channel}>
               <Routes>
+                <Route
+                  exact
+                  path="/games"
+                  element={
+                    <>
+                      <Navbar />
+                      <GamesPage />
+                    </>
+                  }
+                />
+                <Route
+                  exact
+                  path="/games/library"
+                  element={
+                    <>
+                      <Navbar />
+                      <GamesLibrary />
+                    </>
+                  }
+                />
                 <Route path="*" element={<NotFound channel={channel} />} />
                 <Route
                   exact

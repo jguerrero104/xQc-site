@@ -7,15 +7,15 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import CustomLink from '../utils/CustomLink';
 import humanize from 'humanize-duration';
-import { toHMS, toSeconds, getImage } from '../utils/helpers';
+import { toHMS, getImage } from '../utils/helpers';
 
 export default function Chapters(props) {
   const { vod, isCdnAvailable } = props;
   const [anchorEl, setAnchorEl] = useState(null);
   const DEFAULT_VOD =
-    vod.youtube.length > 0
+    vod?.vod_uploads.length > 0
       ? `/youtube/${vod.id}`
-      : Date.now() - new Date(vod.createdAt).getTime() < 14 * 24 * 60 * 60 * 1000 && isCdnAvailable
+      : Date.now() - new Date(vod.created_at).getTime() < 14 * 24 * 60 * 60 * 1000 && isCdnAvailable
         ? `/cdn/${vod.id}`
         : `#`;
 
@@ -37,10 +37,7 @@ export default function Chapters(props) {
       <Menu anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
         {vod.chapters.map((data) => {
           return (
-            <CustomLink
-              key={vod.id + (data?.gameId || data.name) + (data?.start || data.duration)}
-              href={`${DEFAULT_VOD}?t=${toHMS(data?.start || toSeconds(data.duration) || 1)}`}
-            >
+            <CustomLink key={`${vod.id}${data?.game_id}${data?.start}`} href={`${DEFAULT_VOD}?t=${toHMS(data?.start)}`}>
               <MenuItem>
                 <Box sx={{ display: 'flex' }}>
                   <Box sx={{ mr: 1 }}>
@@ -52,7 +49,7 @@ export default function Chapters(props) {
                       <Typography
                         variant="caption"
                         color="textSecondary"
-                      >{`${humanize(data.end * 1000, { largest: 2 })}`}</Typography>
+                      >{`${humanize(data.duration * 1000, { largest: 2 })}`}</Typography>
                     )}
                   </Box>
                 </Box>

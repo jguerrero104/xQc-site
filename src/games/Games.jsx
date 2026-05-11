@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -11,110 +12,96 @@ import MenuItem from '@mui/material/MenuItem';
 import SimpleBar from 'simplebar-react';
 import Footer from '../utils/Footer';
 import Loading from '../utils/Loading';
-import PaginationControls from '../utils/PaginationControls';
-import Vod from './Vod';
+import Game from './Game';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { listVods } from './client';
 import { useDebouncedSetter } from '../utils/debounceHelper';
+import { listGames } from '../vods/client';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PaginationControls from '../utils/PaginationControls';
 
-const FILTERS = ['Default', 'Date', 'Title', 'Game'];
-const PLATFORMS = ['All', 'Twitch', 'Kick'];
+const FILTERS = ['Default', 'Date', 'Game'];
 const START_DATE = import.meta.env.VITE_START_DATE;
-const isCdnAvailable = true;
 
-export default function Vods() {
+export default function GamesPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const isMobile = useMediaQuery('(max-width: 900px)');
-  const [vods, setVods] = useState(null);
-  const [totalVods, setTotalVods] = useState(null);
+  const [games, setGames] = useState(null);
+  const [totalGames, setTotalGames] = useState(null);
   const [filter, setFilter] = useState(FILTERS[0]);
   const [filterStartDate, setFilterStartDate] = useState(dayjs(START_DATE));
   const [filterEndDate, setFilterEndDate] = useState(dayjs());
-  const [filterTitle, setFilterTitle] = useState('');
   const [filterGame, setFilterGame] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [platform, setPlatform] = useState(PLATFORMS[0]);
   const page = parseInt(query.get('page') || '1', 10);
   const limit = isMobile ? 10 : 20;
+  const gameId = query.get('game_id');
 
   useEffect(() => {
     setError(null);
     setLoading(true);
-    setVods(null);
+    setGames(null);
 
-    const fetchVods = async () => {
+    const fetchGames = async () => {
       try {
         const params = { limit, page, sort: 'created_at', order: 'desc' };
-        if (platform !== PLATFORMS[0]) {
-          params.platform = platform.toLowerCase();
-        }
-        switch (filter) {
-          case 'Date':
-            if (filterStartDate > filterEndDate) {
-              setError('End date must be after start date');
-              setLoading(false);
+
+        if (gameId) {
+          params.game_id = gameId;
+        } else {
+          switch (filter) {
+            case 'Date':
+              if (filterStartDate > filterEndDate) {
+                setError('End date must be after start date');
+                setLoading(false);
+                return;
+              }
+              params.from = filterStartDate.toISOString();
+              params.to = filterEndDate.toISOString();
               break;
-            }
-            params.from = filterStartDate.toISOString();
-            params.to = filterEndDate.toISOString();
-            break;
-          case 'Title':
-            if (filterTitle.length === 0) {
-              setLoading(false);
-              return;
-            }
-            params.title = filterTitle;
-            break;
-          case 'Game':
-            if (filterGame.length === 0) {
-              setLoading(false);
-              return;
-            }
-            params.chapter = filterGame;
-            break;
-          default:
-            break;
+            case 'Game':
+              if (filterGame.length === 0) {
+                setLoading(false);
+                return;
+              }
+              params.game_name = filterGame;
+              break;
+          }
         }
 
-        const response = await listVods(params);
-        setVods(response.data);
-        setTotalVods(response.meta.total);
+        const response = await listGames(params);
+        setGames(response.data);
+        setTotalGames(response.meta.total);
       } catch {
-        setError('Failed to load VODs. Please try again later.');
+        setError('Failed to load Games. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
-    fetchVods();
+    fetchGames();
     return;
-  }, [limit, page, filter, filterStartDate, filterEndDate, filterTitle, filterGame, platform]);
+  }, [limit, page, filter, filterStartDate, filterEndDate, filterGame, gameId]);
 
   const changeFilter = (evt) => {
     setFilter(evt.target.value);
-    navigate(`${location.pathname}?page=1`);
+    const params = new URLSearchParams({ page: '1' });
+    if (gameId) params.set('game_id', gameId);
+    navigate(`${location.pathname}?${params}`);
   };
 
-  const changePlatform = (evt) => {
-    setPlatform(evt.target.value);
-    navigate(`${location.pathname}?page=1`);
-  };
-
-  const handleTitleChange = useDebouncedSetter(setFilterTitle, 500);
   const handleGameChange = useDebouncedSetter(setFilterGame, 500);
 
-  const totalPages = Math.ceil(totalVods / limit);
+  const totalPages = Math.ceil(totalGames / limit);
 
   return (
     <SimpleBar style={{ minHeight: 0, height: '100%' }}>
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ padding: 2 }}>
         {error ? (
           <Typography variant="body1" color="error" sx={{ mt: 2, textAlign: 'center' }}>
             {error}
@@ -124,9 +111,9 @@ export default function Vods() {
             <Box
               sx={{ display: 'flex', justifyContent: 'center', mt: 2, flexDirection: 'column', alignItems: 'center' }}
             >
-              {totalVods !== null && (
+              {totalGames !== null && (
                 <Typography variant="h4" color="primary" sx={{ textTransform: 'uppercase', fontWeight: '550' }}>
-                  {`${totalVods} Vods`}
+                  {`${totalGames} Games`}
                 </Typography>
               )}
             </Box>
@@ -140,9 +127,20 @@ export default function Vods() {
                 alignItems: 'center',
               }}
             >
-              <FormControl sx={{ display: 'flex' }}>
+              {gameId && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<ArrowBackIcon fontSize="small" />}
+                  onClick={() => navigate('/games/library')}
+                  sx={{ mr: 2 }}
+                >
+                  Back
+                </Button>
+              )}
+              <FormControl sx={{ display: 'flex', minWidth: 120 }} disabled={!!gameId}>
                 <InputLabel id="select-label">Filter</InputLabel>
-                <Select labelId="select-label" label={filter} value={filter} onChange={changeFilter} autoWidth>
+                <Select labelId="select-label" label="Filter" value={filter} onChange={changeFilter}>
                   {FILTERS.map((data, i) => {
                     return (
                       <MenuItem key={i} value={data}>
@@ -175,17 +173,6 @@ export default function Vods() {
                   </Box>
                 </LocalizationProvider>
               )}
-              {filter === 'Title' && (
-                <Box sx={{ ml: 1 }}>
-                  <TextField
-                    fullWidth
-                    label="Search by Title"
-                    type="text"
-                    onChange={(e) => handleTitleChange(e.target.value)}
-                    defaultValue={filterTitle}
-                  />
-                </Box>
-              )}
               {filter === 'Game' && (
                 <Box sx={{ ml: 1 }}>
                   <TextField
@@ -197,39 +184,25 @@ export default function Vods() {
                   />
                 </Box>
               )}
-              <FormControl sx={{ ml: 1, display: 'flex', minWidth: '5rem' }}>
-                <InputLabel id="platform-select-label">Platform</InputLabel>
-                <Select
-                  labelId="platform-select-label"
-                  label={platform}
-                  value={platform}
-                  onChange={changePlatform}
-                  autoWidth
-                >
-                  {PLATFORMS.map((data, i) => {
-                    return (
-                      <MenuItem key={i} value={data}>
-                        {data}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
             </Box>
             {loading ? <Loading /> : <></>}
-            {vods && vods.length > 0 && (
+            {games && games.length > 0 && (
               <Grid
                 container
                 rowSpacing={1}
                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                 sx={{ mt: 2, justifyContent: 'center' }}
               >
-                {vods.map((vod) => (
-                  <Vod key={vod.id} vod={vod} isMobile={isMobile} isCdnAvailable={isCdnAvailable} />
+                {games.map((game) => (
+                  <Game key={game.id} game={game} isMobile={isMobile} />
                 ))}
               </Grid>
             )}
-            <PaginationControls page={page} totalPages={totalPages} />
+            <PaginationControls
+              page={page}
+              totalPages={totalPages}
+              preserveParams={gameId ? { game_id: gameId } : undefined}
+            />
           </>
         )}
       </Box>
