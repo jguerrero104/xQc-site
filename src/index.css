@@ -1,3 +1,35 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-dark: #0e0e10;
+  --color-dark-light: #1a1a1b;
+  --color-dark-hover: #292828;
+  --color-primary: #fefefe;
+  --color-primary-hover: #2563eb;
+  --color-border: #2e2e30;
+  --color-muted: #7a7a7d;
+  --color-muted-dim: #5a5a5d;
+  --color-error: #ef4444;
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-overlay-light: rgba(0, 0, 0, 0.5);
+  --animate-spin: spin 1s linear infinite;
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+body {
+  background-color: #0e0e10;
+  margin: 0;
+  color: white;
+  scrollbar-gutter: stable;
+}
+
 ul {
   border: 0;
   font: inherit;
@@ -30,20 +62,19 @@ a:active {
   height: 100%;
 }
 
-.player {
-  height: 100%;
-  width: 100%;
-}
-
 *:focus {
   outline: none;
 }
 
-.twemoji {
-  height: 20px;
-  width: 20px;
-  vertical-align: middle;
-  border: none;
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .simplebar-content-wrapper {
+    overflow-x: hidden !important;
+  }
 }
 
 ins.adsbygoogle[data-ad-status='unfilled'] {
