@@ -1,25 +1,30 @@
-import { useEffect, useRef } from 'react';
-
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
+import { useEffect, useRef, useState } from 'react';
 
 export default function AdSenseBanner() {
-  const ref = useRef<HTMLModElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (!ref.current) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {}
+
+    const timer = setTimeout(() => {
+      if (!ref.current) return;
+      const iframe = ref.current.querySelector('iframe');
+      if (!iframe) {
+        setVisible(false);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, []);
 
+  if (!visible) return null;
+
   return (
-    <div className="flex justify-center my-4">
+    <div ref={ref} className="flex justify-center my-4">
       <ins
-        ref={ref}
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client="ca-pub-8093490837210586"
