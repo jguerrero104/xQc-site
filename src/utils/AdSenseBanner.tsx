@@ -1,29 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function AdSenseBanner() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(true);
-
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {}
-
-    const timer = setTimeout(() => {
-      if (!ref.current) return;
-      const iframe = ref.current.querySelector('iframe');
-      if (!iframe) {
-        setVisible(false);
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
   }, []);
 
-  if (!visible) return null;
-
   return (
-    <div ref={ref} className="flex justify-center my-4">
+    <div className="flex justify-center my-4">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
