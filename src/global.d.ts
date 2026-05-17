@@ -64,4 +64,5 @@ interface ImportMeta {
 
 interface Window {
   __GIT_HASH__: string;
+  adsbygoogle: unknown[];
 }
