@@ -242,7 +242,7 @@ export default function Vods() {
   return (
     <SimpleBar ref={scrollRef} className="min-h-0 h-full w-full">
       <div className="p-2 md:p-4 w-full">
-        <AdSenseBanner />
+        <AdSenseBanner slot="9029750733" />
         <div className="flex justify-center mt-2 flex-col items-center">
           {totalVods !== null && <h4 className="text-primary text-3xl uppercase font-medium">{`${totalVods} Vods`}</h4>}
         </div>
@@ -373,7 +373,7 @@ export default function Vods() {
             onHoverPage={(targetPage) => prefetchNextPageVods(queryClient, { ...queryKeyParams, page: targetPage })}
           />
         </div>
-        <AdSenseBanner />
+        <AdSenseBanner slot="9029750733" />
       </div>
       <Footer />
     </SimpleBar>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function AdSenseBanner() {
+export default function AdSenseBanner({ slot }: { slot: string }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -50,9 +50,9 @@ export default function AdSenseBanner() {
       {loaded && (
         <ins
           className="adsbygoogle my-4" 
-          style={{ display: 'block', width: '100%' }}
+          style={{ display: 'block', textAlign: 'center' }} // Fix: centered the internal iframe!
           data-ad-client="ca-pub-8093490837210586"
-          data-ad-slot="9029750733"
+          data-ad-slot={slot}
           data-ad-format="auto"
           data-full-width-responsive="true"
         />
