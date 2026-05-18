@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { KickIcon, TwitchIcon } from '../assets/icons';
-import sadge from '../assets/logo.png';
+import sadge from '../assets/default_thumbnail.png';
 import { type VodData } from '../utils/archive-client';
 import CustomLink from '../utils/CustomLink';
 import CustomWidthTooltip from '../utils/CustomToolTip';

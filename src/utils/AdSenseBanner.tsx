@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 export default function AdSenseBanner() {
-  const ref = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
 
+  // 1. Observe when the ad slot is about to enter the viewport
   useEffect(() => {
-    if (!ref.current) return;
+    if (!wrapperRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -17,16 +18,39 @@ export default function AdSenseBanner() {
       { rootMargin: '200px' }
     );
 
-    observer.observe(ref.current);
+    observer.observe(wrapperRef.current);
     return () => observer.disconnect();
   }, []);
 
+  // 2. Inject script and initialize the ad slot
+  useEffect(() => {
+    if (!loaded) return;
+
+    let script = document.querySelector('script[src*="adsbygoogle.js"]') as HTMLScriptElement;
+    
+    if (!script) {
+      script = document.createElement('script');
+      script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8093490837210586";
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      document.head.appendChild(script);
+    }
+
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("AdSense initialization error: ", e);
+    }
+  }, [loaded]);
+
   return (
-    <div ref={ref} className="flex justify-center my-4">
+    // Removed min-h-[100px] and moved my-4 to the <ins> tag
+    <div ref={wrapperRef} className="flex justify-center w-full">
       {loaded && (
         <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
+          className="adsbygoogle my-4" 
+          style={{ display: 'block', width: '100%' }}
           data-ad-client="ca-pub-8093490837210586"
           data-ad-slot="9029750733"
           data-ad-format="auto"
