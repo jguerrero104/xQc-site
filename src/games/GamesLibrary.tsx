@@ -152,7 +152,7 @@ export default function GamesLibrary() {
   return (
     <SimpleBar ref={scrollRef} className="min-h-0 h-full overflow-x-hidden">
       <div className="p-2 md:p-4 py-1 max-w-full">
-        <AdSenseBanner slot="9029750733" />
+        <AdSenseBanner />
         <div className="flex justify-center mt-2 flex-col items-center">
           {totalGames !== null && (
             <h4 className="text-primary text-3xl uppercase font-medium">{`${totalGames} Total Games`}</h4>
@@ -250,7 +250,7 @@ export default function GamesLibrary() {
             prefetchNextPageGamesLibrary(queryClient, { ...queryKeyParams, page: targetPage })
           }
         />
-        <AdSenseBanner slot="9029750733" />
+        <AdSenseBanner />
       </div>
       <Footer />
     </SimpleBar>

@@ -201,7 +201,7 @@ export default function GamesPage() {
   return (
     <SimpleBar ref={scrollRef} className="min-h-0 h-full w-full">
       <div className="p-2 md:p-4 w-full">
-        <AdSenseBanner slot="9029750733" />
+        <AdSenseBanner />
         <div className="flex justify-center mt-2 flex-col items-center">
           {totalGames !== null && (
             <h4 className="text-primary text-3xl uppercase font-medium">{`${totalGames} Games`}</h4>
@@ -301,7 +301,7 @@ export default function GamesPage() {
             onHoverPage={(targetPage) => prefetchNextPageGames(queryClient, { ...queryKeyParams, page: targetPage })}
           />
         </div>
-        <AdSenseBanner slot="9029750733" />
+        <AdSenseBanner />
       </div>
       <Footer />
     </SimpleBar>
