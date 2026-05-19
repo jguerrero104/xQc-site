@@ -128,7 +128,7 @@ export default function GamesLibrary() {
 
   const paginationParams = {
     ...(searchTerm ? { search: searchTerm } : {}),
-    ...(sort !== 'count' ? { sort } : {}),
+    sort,
   };
 
   useEffect(() => {
@@ -200,46 +200,46 @@ export default function GamesLibrary() {
           )}
 
           {games && games.length > 0 && (
-             <>
-               <div
-                 className={`mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 transition-opacity duration-200 ${isBackgroundFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}
-               >
-             {games.map((game: LibraryGameItem, index: number) => (
-                    <div
-                      key={game.game_id}
-                      className="rounded cursor-pointer no-underline block hover:shadow-glow transition-shadow min-w-0 flex flex-col"
-                    >
-                      <a href={`/games?game_id=${game.game_id}`} className="block flex-1">
-                        <div className="w-full relative overflow-hidden rounded-t aspect-[400/530] bg-dark-light">
-                          {game.chapter_image ? (
-                            <img
-                              src={getImage(game.chapter_image, 400, 530)}
-                              alt=""
-                              width={400}
-                              height={530}
-                              className="absolute inset-0 w-full h-full object-cover"
-                              loading={index < (isMobile ? 4 : 10) ? 'eager' : 'lazy'}
-                              fetchPriority={index < (isMobile ? 4 : 10) ? 'high' : 'auto'}
-                              decoding="async"
-                            />
-                          ) : (
-                            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary text-xs">
-                              No image
-                            </span>
-                          )}
-                        </div>
-                      </a>
-                      <div className="px-1 py-0.5 text-center min-w-0 w-full">
-                        <CustomWidthTooltip title={game.game_name}>
-                          <span className="text-primary font-medium block text-xs truncate">{game.game_name}</span>
-                        </CustomWidthTooltip>
-                        <span className="text-primary text-xs">{game.count || 0} EPs</span>
+            <>
+              <div
+                className={`mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 transition-opacity duration-200 ${isBackgroundFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}
+              >
+                {games.map((game: LibraryGameItem, index: number) => (
+                  <div
+                    key={game.game_id}
+                    className="rounded cursor-pointer no-underline block hover:shadow-glow transition-shadow min-w-0 flex flex-col"
+                  >
+                    <a href={`/games?game_id=${game.game_id}`} className="block flex-1">
+                      <div className="w-full relative overflow-hidden rounded-t aspect-[400/530] bg-dark-light">
+                        {game.chapter_image ? (
+                          <img
+                            src={getImage(game.chapter_image, 400, 530)}
+                            alt=""
+                            width={400}
+                            height={530}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            loading={index < (isMobile ? 4 : 10) ? 'eager' : 'lazy'}
+                            fetchPriority={index < (isMobile ? 4 : 10) ? 'high' : 'auto'}
+                            decoding="async"
+                          />
+                        ) : (
+                          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary text-xs">
+                            No image
+                          </span>
+                        )}
                       </div>
+                    </a>
+                    <div className="px-1 py-0.5 text-center min-w-0 w-full">
+                      <CustomWidthTooltip title={game.game_name}>
+                        <span className="text-primary font-medium block text-xs truncate">{game.game_name}</span>
+                      </CustomWidthTooltip>
+                      <span className="text-primary text-xs">{game.count || 0} EPs</span>
                     </div>
-                   ))}
-                 </div>
-             </>
-           )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <PaginationControls
